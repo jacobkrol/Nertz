@@ -92,3 +92,16 @@ body {
     color: #444;
     margin: 0 0 0 10px;
 }
+
+.small-chart-container {
+    width: 175px;
+    height: 175px;
+    margin: 5px;
+    display: inline-block;
+}
+
+.large-chart-container {
+    width: 730px;
+    height: 400px;
+    margin: 5px;
+}

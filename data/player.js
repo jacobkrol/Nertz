@@ -22,7 +22,7 @@ Player.prototype.nertz_river = function() {
         if(solitaire_stack(bottom, top)) {
             pile.push(this.nertz.pop());
             if(this.nertz.length === 0) {
-                end_game();
+                public.end = true;
             }
             //PICK RANDOM OPTION
             return true;
@@ -40,7 +40,7 @@ Player.prototype.nertz_lake = function() {
         this.score++;
         public.lake.push([this.nertz.pop()]);
         if(this.nertz.length === 0) {
-            end_game();
+            public.end = true;
         }
         return true;
     }
@@ -52,7 +52,7 @@ Player.prototype.nertz_lake = function() {
             this.score++;
             pile.push(this.nertz.pop());
             if(this.nertz.length === 0) {
-                end_game();
+                public.end = true;
             }
             //OPTIONS DONT MATTER
             return true;
@@ -189,7 +189,7 @@ Player.prototype.fill_river = function() {
         if(this.river[i].length === 0) {
             this.river[i] = [this.nertz.pop()];
             if(this.nertz.length === 0) {
-                end_game();
+                public.end = true;
             }
 
         }
@@ -221,23 +221,25 @@ Player.prototype.action = function() {
             break;
         case 4:
             action = this.stream_river();
+            if(!action || this.streamPileSize === 0) {
+                this.stream_update();
+            }
             break;
         case 5:
-            action = this.stream_river();
+            action = this.stream_lake();
+            if(!action || this.streamPileSize === 0) {
+                this.stream_update();
+            }
             break;
         default:
             Error("invalid action selected");
             break;
     }
-    public.stall++;
-    if(action) public.stall = 0;
+    public.stall = action ? 0 : public.stall+1;
     this.actCount[index-1]++; //add action to counter
-    if(!action || this.streamPileSize === 0) {
-        this.stream_update();
-    }
 }
 
-Player.prototype.actionAll = function() {
+Player.prototype.action_all = function() {
     let action = false;
     action = this.river_river() ? true : action;
     action = this.river_lake() ? true : action;

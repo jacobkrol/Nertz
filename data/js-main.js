@@ -94,16 +94,6 @@ function lake_stack(bottom, top) {
     }
 }
 
-function end_game() {
-    // for(let i=0; i<public.players.length; ++i) {
-    //     if(public.players[i].nertz.length === 0) {
-    //         console.log("Player "+String(i)+" wins!");
-    //         break;
-    //     }
-    // }
-    public.end = true;
-}
-
 function show_lake() {
     document.getElementById("lake-container").innerHTML = "";
     let text = "";
@@ -125,7 +115,7 @@ function compute() {
     if(public.end) return;
     for(p of public.players) p.action();
     if(public.stall > 40) {
-        for(p of public.players) p.actionAll();
+        for(p of public.players) p.action_all();
         console.log("stalled");
     }
     if(public.stall > 400) {
