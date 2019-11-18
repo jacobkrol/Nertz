@@ -6,11 +6,10 @@ window.onload = function() {
 
 function setup() {
     private = {
-        goal: 10,
+        goal: 500,
         iteration: 0,
         pMatrices: Array.from(Array(4), () => [8,8,8,8,8,8]),
-        winCount: Array.from(Array(4), () => 0),
-        end: false
+        winCount: Array.from(Array(4), () => 0)
     };
     public = {
         lake: [],
@@ -84,31 +83,85 @@ function resetGame() {
     };
 }
 
+function findResults() {
+    let avMatrix = Array.from(Array(6), () => 0);
+    for(let i=0; i<public.players.length; ++i) {
+        console.log({pMatrix:private.pMatrices[i],wins:private.winCount[i]});
+        for(let j=0; j<avMatrix.length; ++j) {
+            avMatrix[j] += private.winCount[i]*private.pMatrices[i][j];
+        }
+    }
+    return avMatrix.map((i) => 100*i/avMatrix.reduce((a,b) => a+b));
+}
+
+function drawResults(all) {
+    // for(let i=0; i<private.pMatrices.length; ++i) {
+    //     let tag = 'chart-p'+i;
+    //     new Chart(document.getElementById(tag).getContext('2d'),{
+    //         'type': 'doughnut',
+    //         'data': {
+    //             'labels': [
+    //                 'river_river','river_lake',
+    //                 'nertz_river','nertz_lake',
+    //                 'stream_river','stream_lake'
+    //             ],
+    //             'datasets': [{
+    //                 'data': private.pMatrices[i],
+    //                 'backgroundColor': [
+    //                     'rgb(200,50,50)','rgb(200,200,50)',
+    //                     'rgb(50,200,50)','rgb(50,200,200)',
+    //                     'rgb(50,50,200)','rgb(200,50,200)'
+    //                 ]}]}}
+    //     );
+    //     document.getElementById(tag).height = "150";
+    //     document.getElementById(tag).style.height = "150px";
+    //     document.getElementById(tag).width = "140";
+    //     document.getElementById(tag).style.width = "140px";
+    // }
+    new Chart(document.getElementById('chart').getContext('2d'),{
+        'type': 'doughnut',
+        'data': {
+            'labels': [
+                'river_river','river_lake',
+                'nertz_river','nertz_lake',
+                'stream_river','stream_lake'
+            ],
+            'datasets': [{
+                'data': all,
+                'backgroundColor': [
+                    'rgb(200,50,50)','rgb(200,200,50)',
+                    'rgb(50,200,50)','rgb(50,200,200)',
+                    'rgb(50,50,200)','rgb(200,50,200)'
+            ]}],
+            'options':{'responsive':false,'maintainAspectRatio':true}}}
+    );
+}
+
 function main() {
-    draw();
+    //draw();
     compute();
     if(public.end) {
         if(private.iteration < private.goal-1) {
             private.iteration++;
+            console.log("Iteration",private.iteration,"complete");
+
             adjustPMatrix();
             resetGame();
-            console.log("Iteration",private.iteration,"complete");
-            private.pMatrices.forEach((i) => console.log(i));
         } else {
-            private.end = true;
-            clearInterval(f);
-            adjustPMatrix();
             console.log("Training complete");
-            let finalStrategy = Array.from(Array(6), () => 0);
-            for(let i=0; i<public.players.length; ++i) {
-                console.log({pMatrix:private.pMatrices[i],wins:private.winCount[i]});
-                for(let j=0; j<finalStrategy.length; ++j) {
-                    finalStrategy[j] += private.winCount[i]*private.pMatrices[i][j];
-                }
-            }
-            finalStrategy = finalStrategy.map((i) => i/public.players.length);
-            console.log("Final strategy:",finalStrategy);
 
+            adjustPMatrix();
+            clearInterval(f);
+            const res = findResults();
+            console.log({
+                "river_river":res[0],
+                "river_lake":res[1],
+                "nertz_river":res[2],
+                "nertz_lake":res[3],
+                "stream_river":res[4],
+                "stream_lake":res[5]
+            });
+            drawResults(res);
         }
 
     }
