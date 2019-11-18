@@ -1,0 +1,94 @@
+#stream-container > *:not(:last-child), .riverpile > *:not(:last-child) {
+    opacity: 0.5;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 25px;
+}
+
+#river-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.riverpile {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    height: 35px;
+    width: 100px;
+    border-radius: 4px;
+    background: white;
+    border: 1px solid black;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+button > * {
+    display: flex;
+    flex-direction: column;
+
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16pt;
+    margin: 0;
+}
+
+button > img {
+    margin-top: 2px;
+}
+
+.buttonbox {
+    margin: 2px 5px;
+    border-radius: 6px;
+    border: 1px solid black;
+    padding: 4px;
+    display: block;
+    overflow: hidden;
+}
+
+body {
+    margin: 20px;
+}
+
+#table-container > * {
+    text-align: center;
+}
+
+#lake-outer {
+    margin: 10px;
+}
+
+#lake-container > * {
+    display: inline-block;
+}
+
+#stream-container > * {
+    margin: 4px 5px !important;
+}
+
+#player-outer {
+    display: block;
+}
+
+.player-inner {
+    display: inline-block;
+    float: left;
+    margin: 10px;
+}
+
+#nertz-size {
+    font-family: Arial;
+    font-size: 20pt;
+    color: #444;
+    margin: 10px 0 0 0;
+}
+
+#nertz-size-2 {
+    font-family: Arial;
+    font-size: 16pt;
+    color: #444;
+    margin: 0 0 0 10px;
+}
