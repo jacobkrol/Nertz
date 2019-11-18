@@ -172,7 +172,7 @@ function handle_game_end() {
 }
 
 function main() {
-    //draw();
+    draw();
     compute();
     if(public.end) {
         handle_game_end();

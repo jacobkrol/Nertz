@@ -15,6 +15,9 @@ class Player {
 }
 
 Player.prototype.nertz_river = function() {
+    if(public.end) {
+        return false;
+    }
     for(pile of this.river) {
         let bottom = pile[pile.length-1],
             top = this.nertz[this.nertz.length-1];
@@ -31,6 +34,9 @@ Player.prototype.nertz_river = function() {
 }
 
 Player.prototype.nertz_lake = function() {
+    if(public.end) {
+        return false;
+    }
     //clear aces
     if(this.nertz[this.nertz.length-1].slice(0,2) === '01') {
         this.score++;
@@ -58,6 +64,9 @@ Player.prototype.nertz_lake = function() {
 }
 
 Player.prototype.river_river = function() {
+    if(public.end) {
+        return false;
+    }
     let moves = [];
     for(let i=0; i<4; i++) {
         for(let j=0; j<4; j++) {
@@ -84,6 +93,9 @@ Player.prototype.river_river = function() {
 }
 
 Player.prototype.river_lake = function() {
+    if(public.end) {
+        return false;
+    }
     for(let i=0; i<4; ++i) {
         //move Aces to lake
         if(this.river[i][this.river[i].length-1].slice(0,2) === '01') {
@@ -108,6 +120,9 @@ Player.prototype.river_lake = function() {
 }
 
 Player.prototype.stream_lake = function() {
+    if(public.end) {
+        return false;
+    }
     if(this.streamPileSize === 0) {
         this.stream_update();
     }
@@ -123,6 +138,26 @@ Player.prototype.stream_lake = function() {
         if(lake_stack(pile[pile.length-1],top)) {
             this.score++;
             pile.push(this.stream.splice(this.streamIndex+this.streamPileSize-1,1)[0]);
+            this.streamPileSize--;
+            return true;
+        }
+    }
+    return false;
+}
+
+
+Player.prototype.stream_river = function() {
+    if(public.end) {
+        return false;
+    }
+    if(this.streamPileSize === 0) {
+        this.stream_update();
+    }
+    const top = this.stream[this.streamIndex+this.streamPileSize-1];
+    for(pile of this.river) {
+        if(solitaire_stack(pile[pile.length-1],top)) {
+            pile.push(top);
+            this.stream.splice(this.streamIndex+this.streamPileSize-1,1);
             this.streamPileSize--;
             return true;
         }
@@ -152,22 +187,6 @@ Player.prototype.stream_shuffle = function() {
     }
 }
 
-Player.prototype.stream_river = function() {
-    if(this.streamPileSize === 0) {
-        this.stream_update();
-    }
-    const top = this.stream[this.streamIndex+this.streamPileSize-1];
-    for(pile of this.river) {
-        if(solitaire_stack(pile[pile.length-1],top)) {
-            pile.push(top);
-            this.stream.splice(this.streamIndex+this.streamPileSize-1,1);
-            this.streamPileSize--;
-            return true;
-        }
-    }
-    return false;
-}
-
 Player.prototype.fill_river = function() {
     for(let i=0; i<4; ++i) {
         if(this.river[i].length === 0) {
@@ -181,8 +200,6 @@ Player.prototype.fill_river = function() {
 }
 
 Player.prototype.action = function() {
-
-    if(public.end) return; //quit action if game over
 
     const total = this.pMatrix.reduce((a,b) => a+b,0); //find total number of action indicators
     let choice = randint(total), //choose random 'ball'
@@ -226,9 +243,6 @@ Player.prototype.action = function() {
 }
 
 Player.prototype.action_all = function() {
-
-    //quit action if game over
-    if(public.end) return;
 
     //perform all actions
     let action = false;
