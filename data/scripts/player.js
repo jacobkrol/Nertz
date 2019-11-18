@@ -1,21 +1,20 @@
 class Player {
     constructor(_pMatrix) {
+        //parameters for normal gameplay...
         const deck = get_deck();
         this.river = [ [deck[0]], [deck[1]], [deck[2]], [deck[3]] ];
         this.nertz = deck.slice(4,17);
         this.stream = deck.slice(17,53);
         this.streamIndex = 0;
         this.streamPileSize = 3;
+        this.score = 0;
+        //for training purposes...
         this.pMatrix = _pMatrix || Array.from(Array(6), () => 5);
         this.actCount = [0,0,0,0,0,0];
-        this.score = 0;
     }
 }
 
 Player.prototype.nertz_river = function() {
-    if(public.end) {
-        return false;
-    }
     for(pile of this.river) {
         let bottom = pile[pile.length-1],
             top = this.nertz[this.nertz.length-1];
@@ -32,9 +31,6 @@ Player.prototype.nertz_river = function() {
 }
 
 Player.prototype.nertz_lake = function() {
-    if(public.end) {
-        return false;
-    }
     //clear aces
     if(this.nertz[this.nertz.length-1].slice(0,2) === '01') {
         this.score++;
@@ -62,9 +58,6 @@ Player.prototype.nertz_lake = function() {
 }
 
 Player.prototype.river_river = function() {
-    if(public.end) {
-        return false;
-    }
     let moves = [];
     for(let i=0; i<4; i++) {
         for(let j=0; j<4; j++) {
@@ -91,9 +84,6 @@ Player.prototype.river_river = function() {
 }
 
 Player.prototype.river_lake = function() {
-    if(public.end) {
-        return false;
-    }
     for(let i=0; i<4; ++i) {
         //move Aces to lake
         if(this.river[i][this.river[i].length-1].slice(0,2) === '01') {
@@ -118,9 +108,6 @@ Player.prototype.river_lake = function() {
 }
 
 Player.prototype.stream_lake = function() {
-    if(public.end) {
-        return false;
-    }
     if(this.streamPileSize === 0) {
         this.stream_update();
     }
@@ -166,9 +153,6 @@ Player.prototype.stream_shuffle = function() {
 }
 
 Player.prototype.stream_river = function() {
-    if(public.end) {
-        return false;
-    }
     if(this.streamPileSize === 0) {
         this.stream_update();
     }
@@ -197,6 +181,8 @@ Player.prototype.fill_river = function() {
 }
 
 Player.prototype.action = function() {
+
+    if(public.end) return; //quit action if game over
 
     const total = this.pMatrix.reduce((a,b) => a+b,0); //find total number of action indicators
     let choice = randint(total), //choose random 'ball'
@@ -235,11 +221,16 @@ Player.prototype.action = function() {
             Error("invalid action selected");
             break;
     }
-    public.stall = action ? 0 : public.stall+1;
+    public.stall = action ? 0 : public.stall+1; //adjust stall count
     this.actCount[index-1]++; //add action to counter
 }
 
 Player.prototype.action_all = function() {
+
+    //quit action if game over
+    if(public.end) return;
+
+    //perform all actions
     let action = false;
     action = this.river_river() ? true : action;
     action = this.river_lake() ? true : action;
@@ -247,8 +238,9 @@ Player.prototype.action_all = function() {
     action = this.nertz_river() ? true : action;
     action = this.stream_lake() ? true : action;
     action = this.stream_river() ? true : action;
-    public.stall++;
-    if(action) public.stall = 0;
+
+    //adjust stall and act count
+    public.stall = action ? 0 : public.stall+1;
     this.actCount = this.actCount.map((i) => i+1);
     if(!action || this.streamPileSize === 0) {
         this.stream_update();

@@ -4,69 +4,22 @@
     <title>Nertz!</title>
     <meta name="author" content="Jacob Krol" />
 
-    <script type="text/javascript" src="./data/js-main.js"></script>
-    <script type="text/javascript" src="./data/player.js"></script>
-    <script type="text/javascript" src="./data/trainer.js"></script>
-    <script type="text/javascript" src="./data/Chart.js"></script>
+    <script type="text/javascript" src="./data/scripts/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="./data/scripts/js-main.js"></script>
+    <script type="text/javascript" src="./data/scripts/player.js"></script>
+    <script type="text/javascript" src="./data/scripts/trainer.js"></script>
+    <script type="text/javascript" src="./data/scripts/Chart.js"></script>
     <link rel="stylesheet" href="./data/styles.css" />
 </head>
 
 <body>
-    <div id="player-display" style="display:none">
-        <div id="table-container">
-            <div id="lake-outer">
-                <fieldset><legend>Lake</legend>
-                    <div id="lake-container"></div>
-                </fieldset>
-            </div>
 
-            <div id="player-outer">
-                <div class="player-inner">
-                    <fieldset><legend>River</legend>
-                        <!-- <input type="button" value="Top Card" /> -->
-                        <div id="river-container">
-                            <div id="river0" class="riverpile"></div>
-                            <div id="river1" class="riverpile"></div>
-                            <div id="river2" class="riverpile"></div>
-                            <div id="river3" class="riverpile"></div>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="player-inner">
-                    <fieldset><legend>Nertz</legend>
-                        <div id="nertz-pile"></div>
-                        <h1 id="nertz-size"></h1>
-                        <h1 id="nertz-size-2">remaining</h1>
-                    </fieldset>
-                </div>
-
-                <div class="player-inner">
-                    <fieldset><legend>Stream</legend>
-                        <div id="stream-container"></div>
-                    </fieldset>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chart-output">
-        <div class="small-chart-container">
-            <canvas id="chart-p0" width='200' height='150'></canvas>
-        </div>
-        <div class="small-chart-container">
-            <canvas id="chart-p1" width='200' height='150'></canvas>
-        </div>
-        <div class="small-chart-container">
-            <canvas id="chart-p2" width='200' height='150'></canvas>
-        </div>
-        <div class="small-chart-container">
-            <canvas id="chart-p3" width='200' height='150'></canvas>
-        </div>
-        <div class="large-chart-container">
-            <canvas id="chart-all" width='830' height='400'></canvas>
-        </div>
-    </div>
+    <script>
+        $(document).ready(() => {
+            $('#display').load('views/input.html');
+        })
+    </script>
+    <div id="display"></div>
 
 </body>
 
