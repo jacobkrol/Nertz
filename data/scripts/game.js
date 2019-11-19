@@ -103,7 +103,15 @@ function show_lake() {
     document.getElementById("lake-container").innerHTML = text;
 }
 
+function update_progress() {
+    let percent = private.iteration / private.goal;
+    percent += ((13-public.players[0].nertz.length)/13)*(1/private.goal);
+    percent = Math.floor(percent*100);
+    document.getElementById('progress-bar').style.width = percent+'%';
+}
+
 function draw() {
+    update_progress();
     show_lake();
     public.players[0].show_river();
     public.players[0].show_nertz();

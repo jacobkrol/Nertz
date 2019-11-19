@@ -1,15 +1,34 @@
-window.onload = function() {
-    setup();
+function start_trainer(goal) {
+
+    //verify trainer state
+    // (kept as separate statements to avoid error encounters)
+    if(typeof private !== "undefined") {
+        if(private.iteration < private.goal || !public.end) {
+            return;
+        }
+    }
+    goal = Number(goal);
+    if(isNaN(goal) || goal<=0 || Math.floor(goal) !== goal) return;
+
+    //set views
+    document.getElementById('charts-html').style.display = 'none';
+    if(!document.getElementById('toggle-player-view').checked) {
+        document.getElementById('player-html').style.display = 'block';
+    }
+    t0 = performance.now();
+    //begin trainer
+    setup(goal);
     const fps = 50;
     f = setInterval(main, 1000/fps);
 }
 
-function setup() {
+function setup(_goal) {
     private = {
-        goal: 10,
+        goal: _goal,
         iteration: 0,
         pMatrices: Array.from(Array(4), () => [8,8,8,8,8,8]),
-        winCount: Array.from(Array(4), () => 0)
+        winCount: Array.from(Array(4), () => 0),
+        charts: new Array(5)
     };
     public = {
         lake: [],
@@ -102,9 +121,10 @@ function find_results() {
 }
 
 function draw_results(all) {
+    document.getElementById('charts-html').style.display = 'block';
     for(let i=0; i<private.pMatrices.length; ++i) {
         let tag = 'chart-p'+i;
-        new Chart(document.getElementById(tag).getContext('2d'),{
+        private.charts[i] = new Chart(document.getElementById(tag).getContext('2d'),{
             'type': 'doughnut',
             'data': {
                 // 'labels': [
@@ -127,7 +147,7 @@ function draw_results(all) {
             }
         });
     }
-    new Chart(document.getElementById('chart-all').getContext('2d'),{
+    private.charts[private.charts.length-1] = new Chart(document.getElementById('chart-all').getContext('2d'),{
         'type': 'doughnut',
         'data': {
             'labels': [
@@ -147,8 +167,8 @@ function draw_results(all) {
 }
 
 function handle_game_end() {
-    if(private.iteration < private.goal-1) {
-        private.iteration++;
+    private.iteration++;
+    if(private.iteration < private.goal) {
         console.log("Iteration",private.iteration,"complete");
 
         adjust_pMatrix();
@@ -156,6 +176,10 @@ function handle_game_end() {
     } else {
         console.log("Training complete");
 
+        console.log("Time:",performance.now()-t0);
+
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('player-html').style.display = 'none';
         adjust_pMatrix();
         clearInterval(f);
         const res = find_results();
@@ -168,6 +192,7 @@ function handle_game_end() {
             "stream_lake":res[5]
         });
         draw_results(res.map((i) => Math.round(i*100)/100));
+        private.end = true;
     }
 }
 

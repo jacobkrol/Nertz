@@ -16,9 +16,20 @@
     <div id="input-html">
         <h1>Set up your desired program</h1>
         <fieldset><legend>Trainer:</legend>
-            <p>Number of iterations: <input type='text' placeholder='10' /></p>
-
+            <p><input type='checkbox' id='toggle-player-view' /> Hide gameplay view (<em>&asymp;10% performance improvement</em>)</p>
+            <p>Number of iterations: <input type='text' id='training-goal' placeholder='10' /> <input type='button' id='submit-training' value='Go' /></p>
+            <script>
+                window.onload = function() {
+                    document.getElementById('submit-training').addEventListener('click', () => {
+                        start_trainer(document.getElementById('training-goal').value);
+                    });
+                }
+            </script>
         </fieldset>
+    </div>
+
+    <div id="progress-container">
+        <div id="progress-bar"></div>
     </div>
 
     <div id="player-html">
@@ -59,24 +70,38 @@
         </div>
     </div>
 
+
     <div id="charts-html">
-        <div>
-            <div class="small-chart-container">
-                <canvas id="chart-p0" width='200' height='150'></canvas>
+            <div class="chart-outer">
+                <p>Player 0</p>
+                <div class="small-chart-container">
+                    <canvas id="chart-p0" width='200' height='150'></canvas>
+                </div>
             </div>
-            <div class="small-chart-container">
-                <canvas id="chart-p1" width='200' height='150'></canvas>
+            <div class="chart-outer">
+                <p>Player 1</p>
+                <div class="small-chart-container">
+                    <canvas id="chart-p1" width='200' height='150'></canvas>
+                </div>
             </div>
-            <div class="small-chart-container">
-                <canvas id="chart-p2" width='200' height='150'></canvas>
+            <div class="chart-outer">
+                <p>Player 2</p>
+                <div class="small-chart-container">
+                    <canvas id="chart-p2" width='200' height='150'></canvas>
+                </div>
             </div>
-            <div class="small-chart-container">
-                <canvas id="chart-p3" width='200' height='150'></canvas>
+            <div class="chart-outer">
+                <p>Player 3</p>
+                <div class="small-chart-container">
+                    <canvas id="chart-p3" width='200' height='150'></canvas>
+                </div>
             </div>
-            <div class="large-chart-container">
-                <canvas id="chart-all" width='830' height='400'></canvas>
+            <div class="chart-outer">
+                <p style="margin-top: 15px">Weighted Average</p>
+                <div class="large-chart-container">
+                    <canvas id="chart-all" width='830' height='400'></canvas>
+                </div>
             </div>
-        </div>
     </div>
 
 

@@ -5,6 +5,7 @@
 
 body {
     margin: 0;
+    /* font-family: Trebuchet, sans-serif; */
 }
 
 /*
@@ -12,8 +13,25 @@ body {
 */
 
 #input-html {
-    margin: 20px;
+    margin: 20px 30px;
     display: block;
+}
+
+/*
+    PROGRESS BAR
+*/
+
+#progress-container {
+    margin: 10px 32px;
+    border-top: 1px solid black;
+}
+
+#progress-bar {
+    width: 0;
+    height: 5px;
+    display: inline-block;
+    float: left;
+    background-color: lime;
 }
 
 /*
@@ -21,7 +39,7 @@ body {
 */
 
 #player-html {
-    display: block;
+    display: none;
 }
 
 #stream-container > *:not(:last-child), .riverpile > *:not(:last-child) {
@@ -98,6 +116,7 @@ button > img {
 
 #player-outer {
     display: block;
+    overflow: hidden;
 }
 
 .player-inner {
@@ -117,7 +136,7 @@ button > img {
     font-family: Arial;
     font-size: 16pt;
     color: #444;
-    margin: 0 0 0 10px;
+    margin: 0;
 }
 
 
@@ -125,19 +144,33 @@ button > img {
     CHART.HTML
 */
 
-#chart-html {
+#charts-html {
     text-align: center;
+    display: none;
+    margin-top: 25px;
 }
 
+
+
 .small-chart-container {
-    width: 175px;
-    height: 175px;
+    max-width: 175px;
+    max-height: 175px;
     margin: 5px;
     display: inline-block;
 }
 
 .large-chart-container {
-    width: 730px;
-    height: 400px;
+    max-width: 730px;
+    max-height: 400px;
     margin: 5px;
+    display: inline-block;
+}
+
+.chart-outer {
+    display: inline-block;
+}
+
+.chart-outer p {
+    margin: 0;
+    font-weight: bold;
 }
