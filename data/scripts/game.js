@@ -63,8 +63,9 @@ function get_card(card) {
         style = "lime";
     }
 
-    return '<div class="buttonbox"><button style="color:'+style+'"><p>'+
-            value+'</p><img src="./data/images/'+
+    return '<div class="buttonbox" data-card="'+
+            card+'"><button style="color:'+
+            style+'"><p>'+value+'</p><img src="./data/images/'+
             suit+'-suit.png" height="20" /></button></div>';
 }
 
@@ -111,23 +112,51 @@ function update_progress() {
 }
 
 function draw() {
-    update_progress();
-    show_lake();
-    public.players[0].show_river();
-    public.players[0].show_nertz();
-    public.players[0].show_nertz_size();
-    public.players[0].show_stream();
+    show_lake(); // always
+
+    if(typeof public.human === "undefined") {
+        // if training, draw first computer and update bar
+        update_progress();
+        public.players[0].show_river();
+        public.players[0].show_nertz();
+        public.players[0].show_nertz_size();
+        public.players[0].show_stream();
+    } else {
+        // if playing, draw human
+        public.human.show_river();
+        public.human.show_nertz();
+        public.human.show_nertz_size();
+        public.human.show_stream();
+    }
+
 }
 
 function compute() {
+
     if(public.end) return;
-    for(p of public.players) p.action();
-    if(public.stall > 40) {
-        for(p of public.players) p.action_all();
-        console.log("stalled");
+    if(typeof public.human === "undefined") {
+        // if training, go ahead with computer actions
+        for(p of public.players) p.action();
+        if(public.stall > 40) {
+            for(p of public.players) p.action_all();
+            console.log("stalled");
+        }
     }
-    if(public.stall > 400) {
-        for(p of public.players) p.stream_shuffle();
-        console.log("super stalled");
+
+
+    if(typeof public.human === "undefined") {
+        // if training, handle super stall
+        if(public.stall > 400) {
+            for(p of public.players) p.stream_shuffle();
+            console.log("super stalled");
+        }
+    } else {
+        // if playing, wait for super stall
+        if(public.stall > 200 && public.human.isStalled) {
+            for(p of public.players) p.stream_shuffle();
+            public.human.stream_shuffle();
+            console.log("super stalled");
+        }
     }
+
 }
